@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Random Word Pair Generator</title>
+<style>
+:root{--ink:#20243a;--paper:#fffdf8;--coral:#ff715b;--yellow:#ffd166;--teal:#56c7b5}
+*{box-sizing:border-box}
+body{margin:0;padding:24px;background:transparent;color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.app{width:min(100%,760px);margin:0 auto;padding:clamp(22px,5vw,42px);background:var(--paper);border:2px solid var(--ink);border-radius:24px;box-shadow:7px 7px 0 var(--ink);text-align:center}
+h1{margin:0;font-size:clamp(1.8rem,5vw,2.65rem);line-height:1.05;letter-spacing:-.045em}
+.intro{max-width:510px;margin:14px auto 26px;font-size:1rem;line-height:1.5}
+.words{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:0 auto 22px}
+.word-card{min-height:142px;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:18px 12px;border:2px solid var(--ink);border-radius:17px;background:var(--yellow)}
+.word-card:nth-child(2){background:var(--teal)}
+.word-label{margin-bottom:9px;font-size:.72rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+.word{font-size:clamp(1.5rem,5vw,2.5rem);font-weight:850;line-height:1.05;overflow-wrap:anywhere}
+.actions{display:flex;justify-content:center;flex-wrap:wrap;gap:10px}
+button{appearance:none;border:2px solid var(--ink);border-radius:999px;padding:13px 22px;background:var(--coral);color:var(--ink);font:inherit;font-weight:800;cursor:pointer;box-shadow:3px 3px 0 var(--ink);transition:transform .12s ease,box-shadow .12s ease}
+button:hover{transform:translate(1px,1px);box-shadow:2px 2px 0 var(--ink)}
+button:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+button:focus-visible{outline:3px solid #315de8;outline-offset:4px}
+.secondary{background:white}
+.status{min-height:1.3em;margin:12px 0 0;color:#4b5064;font-size:.82rem}
+@media(max-width:460px){body{padding:12px}.app{border-radius:18px;box-shadow:4px 4px 0 var(--ink)}.words{gap:9px}.word-card{min-height:118px;padding:12px 8px}button{width:100%}}
+@media(prefers-reduced-motion:reduce){button{transition:none}}
+</style>
+</head>
+<body>
+<main class="app">
+<h1>Generate a random word pair!</h1>
+<p class="intro">Click the button to generate a random word pair</p>
+<section class="words" aria-live="polite" aria-atomic="true" aria-label="Your two random words">
+<div class="word-card"><span class="word-label">Word 1</span><span class="word" id="wordOne">Ready?</span></div>
+<div class="word-card"><span class="word-label">Word 2</span><span class="word" id="wordTwo">Ready?</span></div>
+</section>
+<div class="actions">
+<button id="generate" type="button">Generate my words!</button>
+<button id="again" class="secondary" type="button" hidden>Try another pair</button>
+</div>
+<p class="status" id="status" role="status">Your two-word challenge is waiting.</p>
+</main>
+<script>
+(() => {
+const words = [
+"acorn","adventure","airport","algae","alarm","album","amusement","anchor","aquarium","arch","avalanche","backpack","balloon","barcode","basket","beehive","bicycle","birdsong","blanket","blueprint","boat","bookstore","bridge","bubble","cactus","camera","campfire","carnival","castle","cave","chalk","chess","cloud","compass","concert","cookie","coral","costume","crater","crossroads","daydream","desert","disguise","doorbell","dragonfly","drum","echo","eclipse","elevator","envelope","feather","festival","firefly","footprint","fountain","frisbee","garden","glacier","glitter","hammock","harbor","harmony","headphones","honey","hot-air balloon","iceberg","island","jigsaw","jungle","kaleidoscope","kite","lantern","lighthouse","marble","maze","memory","meteor","mirror","monument","moonlight","mosaic","mountain","museum","mystery","notebook","observatory","ocean","origami","parade","puzzle","rainbow","recipe","recycling","river","robot","roller coaster","sailboat","sandcastle","scavenger hunt","secret","shadow","skateboard","soap","soundtrack","spaceship","spice","spiderweb","stargazing","suitcase","sunflower","sunrise","symphony","telescope","time capsule","tornado","train","treasure","treehouse","trophy","tunnel","umbrellas","volcano","waterfall","windmill","window","wish","workshop","zipper","zoo","balance","belonging","chance","curiosity","courage","discovery","freedom","friendship","imagination","kindness","patience","surprise","teamwork","wonder"
+];
+const one=document.getElementById("wordOne"),two=document.getElementById("wordTwo");
+const generate=document.getElementById("generate"),again=document.getElementById("again"),status=document.getElementById("status");
+function randomIndex(max){
+if(window.crypto&&window.crypto.getRandomValues){const value=new Uint32Array(1);window.crypto.getRandomValues(value);return value[0]%max;}
+return Math.floor(Math.random()*max);
+}
+function makePair(){
+const first=randomIndex(words.length);let second=randomIndex(words.length-1);if(second>=first)second++;
+one.textContent=words[first];two.textContent=words[second];generate.hidden=true;again.hidden=false;
+status.textContent="Your pair is ready. What unexpected connection can you find?";
+}
+generate.addEventListener("click",makePair);again.addEventListener("click",makePair);
+})();
+</script>
+</body>
+</html>
